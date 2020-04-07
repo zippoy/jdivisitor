@@ -19,26 +19,24 @@
 
 package org.jdivisitor.debugger.event;
 
+import com.sun.jdi.event.ThreadStartEvent;
+import lombok.AllArgsConstructor;
 import org.jdivisitor.debugger.event.visitor.EventVisitor;
 import org.jdivisitor.debugger.event.visitor.Visitable;
-import com.sun.jdi.event.ThreadStartEvent;
 
 /**
  * Visitable thread start event.
- * 
+ *
  * @author Adrian Herrera
  * @see ThreadStartEvent
  */
+@AllArgsConstructor
 public class VisitableThreadStartEvent implements Visitable {
 
     private final ThreadStartEvent event;
 
-    public VisitableThreadStartEvent(ThreadStartEvent event) {
-        this.event = event;
-    }
-
     @Override
     public void accept(EventVisitor visitor) {
-        visitor.visit(event);
+        visitor.visit(this.event);
     }
 }

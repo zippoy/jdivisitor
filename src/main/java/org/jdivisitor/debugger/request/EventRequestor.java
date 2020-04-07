@@ -24,7 +24,7 @@ import com.sun.jdi.request.EventRequestManager;
 /**
  * Interface for classes to request specific JDI events be sent to the debugger.
  * Requests are managed (created/deleted) via a {@link EventRequestManager}.
- * 
+ *
  * @author Adrian Herrera
  * @see EventRequestManager
  */
@@ -32,8 +32,8 @@ public interface EventRequestor {
 
     /**
      * Request specific JDI events to be sent to the debugger.
-     * 
+     *
      * @param erm Event request manager
      */
-    public void requestEvents(EventRequestManager erm);
+    void requestEvents(EventRequestManager erm);
 }

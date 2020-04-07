@@ -19,26 +19,24 @@
 
 package org.jdivisitor.debugger.event;
 
+import com.sun.jdi.event.ClassUnloadEvent;
+import lombok.AllArgsConstructor;
 import org.jdivisitor.debugger.event.visitor.EventVisitor;
 import org.jdivisitor.debugger.event.visitor.Visitable;
-import com.sun.jdi.event.ClassUnloadEvent;
 
 /**
  * Visitable class unload event.
- * 
+ *
  * @author Adrian Herrera
  * @see ClassUnloadEvent
  */
+@AllArgsConstructor
 public class VisitableClassUnloadEvent implements Visitable {
 
     private final ClassUnloadEvent event;
 
-    public VisitableClassUnloadEvent(ClassUnloadEvent event) {
-        this.event = event;
-    }
-
     @Override
     public void accept(EventVisitor visitor) {
-        visitor.visit(event);
+        visitor.visit(this.event);
     }
 }

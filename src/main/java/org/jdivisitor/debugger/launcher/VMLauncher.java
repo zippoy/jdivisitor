@@ -19,24 +19,24 @@
 
 package org.jdivisitor.debugger.launcher;
 
-import java.util.List;
-
 import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.connect.Connector;
+
+import java.util.List;
 
 /**
  * Abstract class for connecting to a target virtual machine in debug mode.
  *
  * @author Adrian Herrera
  */
-public abstract class VMConnector {
+public abstract class VMLauncher {
 
     /**
      * Connect to the target virtual machine in debug mode.
      *
      * @return The virtual machine instance
      * @throws Exception An error occurred when connecting to the virtual
-     *         machine
+     *                   machine
      */
     public abstract VirtualMachine connect() throws Exception;
 
@@ -44,7 +44,7 @@ public abstract class VMConnector {
      * Find the virtual machine connector with the given name.
      *
      * @param connectorName The connector to find
-     * @param connectors List of connectors to search
+     * @param connectors    List of connectors to search
      * @return The connector
      */
     protected static <T extends Connector> T findConnector(

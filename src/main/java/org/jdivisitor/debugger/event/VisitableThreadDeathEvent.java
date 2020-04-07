@@ -19,26 +19,24 @@
 
 package org.jdivisitor.debugger.event;
 
+import com.sun.jdi.event.ThreadDeathEvent;
+import lombok.AllArgsConstructor;
 import org.jdivisitor.debugger.event.visitor.EventVisitor;
 import org.jdivisitor.debugger.event.visitor.Visitable;
-import com.sun.jdi.event.ThreadDeathEvent;
 
 /**
  * Visitable thread death event.
- * 
+ *
  * @author Adrian Herrera
  * @see ThreadDeathEvent
  */
+@AllArgsConstructor
 public class VisitableThreadDeathEvent implements Visitable {
 
     private final ThreadDeathEvent event;
 
-    public VisitableThreadDeathEvent(ThreadDeathEvent event) {
-        this.event = event;
-    }
-
     @Override
     public void accept(EventVisitor visitor) {
-        visitor.visit(event);
+        visitor.visit(this.event);
     }
 }

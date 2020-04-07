@@ -19,24 +19,22 @@
 
 package org.jdivisitor.debugger.launcher;
 
-import java.net.InetSocketAddress;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.Validate;
-
 import com.sun.jdi.Bootstrap;
 import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
+import org.apache.commons.lang3.Validate;
+
+import java.net.InetSocketAddress;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Attach (via a socket) to a listening virtual machine in debug mode.
  *
  * @author Adrian Herrera
- *
  */
-public class RemoteVMConnector extends VMConnector {
+public class RemoteVMLauncher extends VMLauncher {
 
     /**
      * Socket connection details.
@@ -47,9 +45,9 @@ public class RemoteVMConnector extends VMConnector {
      * Constructor.
      *
      * @param hostname Name of the host to connect to
-     * @param port Port number the virtual machine is listening on
+     * @param port     Port number the virtual machine is listening on
      */
-    public RemoteVMConnector(String hostname, int port) {
+    public RemoteVMLauncher(String hostname, int port) {
         this(new InetSocketAddress(hostname, port));
     }
 
@@ -58,7 +56,7 @@ public class RemoteVMConnector extends VMConnector {
      *
      * @param sockAddr Socket address structure to connect to.
      */
-    public RemoteVMConnector(InetSocketAddress sockAddr) {
+    public RemoteVMLauncher(InetSocketAddress sockAddr) {
         socketAddress = Validate.notNull(sockAddr);
     }
 

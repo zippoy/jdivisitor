@@ -25,11 +25,6 @@
 
 package org.jdivisitor.debugger;
 
-import org.apache.commons.lang3.Validate;
-
-import org.jdivisitor.debugger.event.transform.EventTransformer;
-import org.jdivisitor.debugger.event.visitor.EventVisitor;
-import org.jdivisitor.debugger.event.visitor.Visitable;
 import com.sun.jdi.VMDisconnectedException;
 import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.event.Event;
@@ -38,11 +33,15 @@ import com.sun.jdi.event.EventQueue;
 import com.sun.jdi.event.EventSet;
 import com.sun.jdi.event.VMDeathEvent;
 import com.sun.jdi.event.VMDisconnectEvent;
+import org.apache.commons.lang3.Validate;
+import org.jdivisitor.debugger.event.transform.EventTransformer;
+import org.jdivisitor.debugger.event.visitor.EventVisitor;
+import org.jdivisitor.debugger.event.visitor.Visitable;
 
 /**
  * Processes incoming JDI events. As each event occurs, an {@code EventVisitor}
  * will handle the event.
- * 
+ *
  * @author Robert Field
  * @author Adrian Herrera
  */
@@ -66,7 +65,7 @@ class EventThread extends Thread {
     /**
      * Create a new event thread to process JDI events. This event thread will
      * essentially step through the target and ignore all events.
-     * 
+     *
      * @param vm The virtual machine generating the JDI events
      */
     public EventThread(VirtualMachine vm) {
@@ -75,8 +74,8 @@ class EventThread extends Thread {
 
     /**
      * Create a new event thread to process JDI events.
-     * 
-     * @param vm The virtual machine generating the JDI events
+     *
+     * @param vm      The virtual machine generating the JDI events
      * @param visitor Event visitor
      */
     public EventThread(VirtualMachine vm, EventVisitor visitor) {
@@ -87,15 +86,15 @@ class EventThread extends Thread {
 
     /**
      * Run the event handling thread.
-     * 
+     * <p>
      * As long as the thread remains connected to the VM, events are removed
      * from the queue and dispatched.
      */
     @Override
     public void run() {
-        EventQueue queue = vm.eventQueue();
+        EventQueue queue = this.vm.eventQueue();
 
-        while (connected) {
+        while (this.connected) {
             try {
                 EventSet eventSet = queue.remove();
 
@@ -105,7 +104,7 @@ class EventThread extends Thread {
                 }
                 eventSet.resume();
             } catch (InterruptedException ie) {
-                vm.dispose();
+                this.vm.dispose();
                 break;
             } catch (VMDisconnectedException vmde) {
                 handleDisconnectedException();
@@ -117,13 +116,13 @@ class EventThread extends Thread {
     /**
      * A {@link VMDisconnectedException} has happened while dealing with another
      * event. We need to flush the event queue, dealing only with exit events (
-     * {@link VMDeatEvent} and {@link VMDisconnectEvent}) so that we terminate
+     * {@link VMDeathEvent} and {@link VMDisconnectEvent}) so that we terminate
      * correctly.
      */
     private void handleDisconnectedException() {
-        EventQueue queue = vm.eventQueue();
+        EventQueue queue = this.vm.eventQueue();
 
-        while (connected) {
+        while (this.connected) {
             try {
                 EventSet eventSet = queue.remove();
 
@@ -135,12 +134,12 @@ class EventThread extends Thread {
                         handleEvent(event);
                     } else if (event instanceof VMDisconnectEvent) {
                         handleEvent(event);
-                        connected = false;
+                        this.connected = false;
                     }
                 }
                 eventSet.resume();
             } catch (InterruptedException ie) {
-                vm.dispose();
+                this.vm.dispose();
                 break;
             } catch (VMDisconnectedException vmde) {
                 break;
@@ -150,13 +149,13 @@ class EventThread extends Thread {
 
     /**
      * Handle the event by invoking the event visitor.
-     * 
+     *
      * @param event Event to handle
      */
     private void handleEvent(Event event) {
-        if (eventVisitor != null) {
+        if (this.eventVisitor != null) {
             Visitable visitableEvent = EventTransformer.transform(event);
-            visitableEvent.accept(eventVisitor);
+            visitableEvent.accept(this.eventVisitor);
         }
     }
 }

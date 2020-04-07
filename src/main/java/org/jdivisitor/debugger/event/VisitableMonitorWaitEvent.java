@@ -19,26 +19,24 @@
 
 package org.jdivisitor.debugger.event;
 
+import com.sun.jdi.event.MonitorWaitEvent;
+import lombok.AllArgsConstructor;
 import org.jdivisitor.debugger.event.visitor.EventVisitor;
 import org.jdivisitor.debugger.event.visitor.Visitable;
-import com.sun.jdi.event.MonitorWaitEvent;
 
 /**
  * Visitable monitor wait event.
- * 
+ *
  * @author Adrian Herrera
  * @see MonitorWaitEvent
  */
+@AllArgsConstructor
 public class VisitableMonitorWaitEvent implements Visitable {
 
     private final MonitorWaitEvent event;
 
-    public VisitableMonitorWaitEvent(MonitorWaitEvent event) {
-        this.event = event;
-    }
-
     @Override
     public void accept(EventVisitor visitor) {
-        visitor.visit(event);
+        visitor.visit(this.event);
     }
 }

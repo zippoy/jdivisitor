@@ -19,26 +19,24 @@
 
 package org.jdivisitor.debugger.event;
 
+import com.sun.jdi.event.MethodExitEvent;
+import lombok.AllArgsConstructor;
 import org.jdivisitor.debugger.event.visitor.EventVisitor;
 import org.jdivisitor.debugger.event.visitor.Visitable;
-import com.sun.jdi.event.MethodExitEvent;
 
 /**
  * Visitable method exit event.
- * 
+ *
  * @author Adrian Herrera
  * @see MethodExitEvent
  */
+@AllArgsConstructor
 public class VisitableMethodExitEvent implements Visitable {
 
     private final MethodExitEvent event;
 
-    public VisitableMethodExitEvent(MethodExitEvent event) {
-        this.event = event;
-    }
-
     @Override
     public void accept(EventVisitor visitor) {
-        visitor.visit(event);
+        visitor.visit(this.event);
     }
 }

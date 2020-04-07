@@ -19,31 +19,6 @@
 
 package org.jdivisitor.debugger.event.transform;
 
-import java.lang.reflect.Constructor;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.jdivisitor.debugger.event.VisitableAccessWatchpointEvent;
-import org.jdivisitor.debugger.event.VisitableBreakpointEvent;
-import org.jdivisitor.debugger.event.VisitableClassPrepareEvent;
-import org.jdivisitor.debugger.event.VisitableClassUnloadEvent;
-import org.jdivisitor.debugger.event.VisitableExceptionEvent;
-import org.jdivisitor.debugger.event.VisitableLocatableEvent;
-import org.jdivisitor.debugger.event.VisitableMethodEntryEvent;
-import org.jdivisitor.debugger.event.VisitableMethodExitEvent;
-import org.jdivisitor.debugger.event.VisitableModificationWatchpointEvent;
-import org.jdivisitor.debugger.event.VisitableMonitorContendedEnterEvent;
-import org.jdivisitor.debugger.event.VisitableMonitorContendedEnteredEvent;
-import org.jdivisitor.debugger.event.VisitableMonitorWaitEvent;
-import org.jdivisitor.debugger.event.VisitableMonitorWaitedEvent;
-import org.jdivisitor.debugger.event.VisitableStepEvent;
-import org.jdivisitor.debugger.event.VisitableThreadDeathEvent;
-import org.jdivisitor.debugger.event.VisitableThreadStartEvent;
-import org.jdivisitor.debugger.event.VisitableVMDeathEvent;
-import org.jdivisitor.debugger.event.VisitableVMDisconnectEvent;
-import org.jdivisitor.debugger.event.VisitableVMStartEvent;
-import org.jdivisitor.debugger.event.VisitableWatchpointEvent;
-import org.jdivisitor.debugger.event.visitor.Visitable;
 import com.sun.jdi.event.AccessWatchpointEvent;
 import com.sun.jdi.event.BreakpointEvent;
 import com.sun.jdi.event.ClassPrepareEvent;
@@ -65,6 +40,33 @@ import com.sun.jdi.event.VMDeathEvent;
 import com.sun.jdi.event.VMDisconnectEvent;
 import com.sun.jdi.event.VMStartEvent;
 import com.sun.jdi.event.WatchpointEvent;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.jdivisitor.debugger.event.VisitableAccessWatchpointEvent;
+import org.jdivisitor.debugger.event.VisitableBreakpointEvent;
+import org.jdivisitor.debugger.event.VisitableClassPrepareEvent;
+import org.jdivisitor.debugger.event.VisitableClassUnloadEvent;
+import org.jdivisitor.debugger.event.VisitableExceptionEvent;
+import org.jdivisitor.debugger.event.VisitableLocatableEvent;
+import org.jdivisitor.debugger.event.VisitableMethodEntryEvent;
+import org.jdivisitor.debugger.event.VisitableMethodExitEvent;
+import org.jdivisitor.debugger.event.VisitableModificationWatchpointEvent;
+import org.jdivisitor.debugger.event.VisitableMonitorContendedEnterEvent;
+import org.jdivisitor.debugger.event.VisitableMonitorContendedEnteredEvent;
+import org.jdivisitor.debugger.event.VisitableMonitorWaitEvent;
+import org.jdivisitor.debugger.event.VisitableMonitorWaitedEvent;
+import org.jdivisitor.debugger.event.VisitableStepEvent;
+import org.jdivisitor.debugger.event.VisitableThreadDeathEvent;
+import org.jdivisitor.debugger.event.VisitableThreadStartEvent;
+import org.jdivisitor.debugger.event.VisitableVMDeathEvent;
+import org.jdivisitor.debugger.event.VisitableVMDisconnectEvent;
+import org.jdivisitor.debugger.event.VisitableVMStartEvent;
+import org.jdivisitor.debugger.event.VisitableWatchpointEvent;
+import org.jdivisitor.debugger.event.visitor.Visitable;
+
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Transforms a JDI event to a {@code Visitable} event.
@@ -76,6 +78,7 @@ import com.sun.jdi.event.WatchpointEvent;
  *
  * @author Adrian Herrera
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EventTransformer {
 
     /**
@@ -85,10 +88,9 @@ public final class EventTransformer {
 
     // Initialise the mapping
     static {
-        eventMap = new HashMap<Class<? extends Event>, Class<? extends Visitable>>();
+        eventMap = new HashMap();
 
-        eventMap.put(AccessWatchpointEvent.class,
-                VisitableAccessWatchpointEvent.class);
+        eventMap.put(AccessWatchpointEvent.class, VisitableAccessWatchpointEvent.class);
         eventMap.put(BreakpointEvent.class, VisitableBreakpointEvent.class);
         eventMap.put(ClassPrepareEvent.class, VisitableClassPrepareEvent.class);
         eventMap.put(ClassUnloadEvent.class, VisitableClassUnloadEvent.class);
@@ -96,14 +98,10 @@ public final class EventTransformer {
         eventMap.put(LocatableEvent.class, VisitableLocatableEvent.class);
         eventMap.put(MethodEntryEvent.class, VisitableMethodEntryEvent.class);
         eventMap.put(MethodExitEvent.class, VisitableMethodExitEvent.class);
-        eventMap.put(ModificationWatchpointEvent.class,
-                VisitableModificationWatchpointEvent.class);
-        eventMap.put(MonitorContendedEnteredEvent.class,
-                VisitableMonitorContendedEnteredEvent.class);
-        eventMap.put(MonitorContendedEnterEvent.class,
-                VisitableMonitorContendedEnterEvent.class);
-        eventMap.put(MonitorWaitedEvent.class,
-                VisitableMonitorWaitedEvent.class);
+        eventMap.put(ModificationWatchpointEvent.class, VisitableModificationWatchpointEvent.class);
+        eventMap.put(MonitorContendedEnteredEvent.class, VisitableMonitorContendedEnteredEvent.class);
+        eventMap.put(MonitorContendedEnterEvent.class, VisitableMonitorContendedEnterEvent.class);
+        eventMap.put(MonitorWaitedEvent.class, VisitableMonitorWaitedEvent.class);
         eventMap.put(MonitorWaitEvent.class, VisitableMonitorWaitEvent.class);
         eventMap.put(StepEvent.class, VisitableStepEvent.class);
         eventMap.put(ThreadDeathEvent.class, VisitableThreadDeathEvent.class);
@@ -115,12 +113,6 @@ public final class EventTransformer {
     }
 
     /**
-     * Private constructor to prevent instantiation.
-     */
-    private EventTransformer() {
-    }
-
-    /**
      * Transforms a JDI event to a visitable event.
      *
      * @param event JDI event
@@ -129,12 +121,10 @@ public final class EventTransformer {
     public static Visitable transform(Event event) {
         // This assumes that an event implements only one interface
         Class<?> eventClass = event.getClass().getInterfaces()[0];
-        Class<? extends Visitable> visitableEventClass = eventMap
-                .get(eventClass);
+        Class<? extends Visitable> visitableEventClass = eventMap.get(eventClass);
 
         try {
-            Constructor<? extends Visitable> constructor = visitableEventClass
-                    .getConstructor(eventClass);
+            Constructor<? extends Visitable> constructor = visitableEventClass.getConstructor(eventClass);
             return constructor.newInstance(event);
         } catch (Exception e) {
             throw new RuntimeException(e);

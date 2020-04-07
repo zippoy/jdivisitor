@@ -19,26 +19,24 @@
 
 package org.jdivisitor.debugger.event;
 
+import com.sun.jdi.event.ClassPrepareEvent;
+import lombok.AllArgsConstructor;
 import org.jdivisitor.debugger.event.visitor.EventVisitor;
 import org.jdivisitor.debugger.event.visitor.Visitable;
-import com.sun.jdi.event.ClassPrepareEvent;
 
 /**
  * Visitable class prepare event.
- * 
+ *
  * @author Adrian Herrera
  * @see ClassPrepareEvent
  */
+@AllArgsConstructor
 public class VisitableClassPrepareEvent implements Visitable {
 
     private final ClassPrepareEvent event;
 
-    public VisitableClassPrepareEvent(ClassPrepareEvent event) {
-        this.event = event;
-    }
-
     @Override
     public void accept(EventVisitor visitor) {
-        visitor.visit(event);
+        visitor.visit(this.event);
     }
 }

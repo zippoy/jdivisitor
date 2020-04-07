@@ -19,26 +19,24 @@
 
 package org.jdivisitor.debugger.event;
 
+import com.sun.jdi.event.MethodEntryEvent;
+import lombok.AllArgsConstructor;
 import org.jdivisitor.debugger.event.visitor.EventVisitor;
 import org.jdivisitor.debugger.event.visitor.Visitable;
-import com.sun.jdi.event.MethodEntryEvent;
 
 /**
  * Visitable method entry event.
- * 
+ *
  * @author Adrian Herrera
  * @see MethodEntryEvent
  */
+@AllArgsConstructor
 public class VisitableMethodEntryEvent implements Visitable {
 
     private final MethodEntryEvent event;
 
-    public VisitableMethodEntryEvent(MethodEntryEvent event) {
-        this.event = event;
-    }
-
     @Override
     public void accept(EventVisitor visitor) {
-        visitor.visit(event);
+        visitor.visit(this.event);
     }
 }

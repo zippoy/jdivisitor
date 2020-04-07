@@ -19,11 +19,11 @@
 
 package org.jdivisitor.debugger;
 
-import org.apache.commons.lang3.Validate;
-
-import org.jdivisitor.debugger.request.EventRequestor;
-import org.jdivisitor.debugger.event.visitor.EventVisitor;
 import com.sun.jdi.VirtualMachine;
+import org.apache.commons.lang3.Validate;
+import org.jdivisitor.debugger.event.visitor.EventVisitor;
+import org.jdivisitor.debugger.launcher.VMLauncher;
+import org.jdivisitor.debugger.request.EventRequestor;
 
 /**
  * The front end debugger that interacts with the back end over JDI. A typical
@@ -57,12 +57,24 @@ public final class Debugger {
     }
 
     /**
+     * Create a new debugger for the given virtual machine.
+     *
+     * @param launcher Virtual machine
+     */
+    public Debugger(VMLauncher launcher) throws Exception {
+        if (null == launcher) {
+            throw new NullPointerException("VMLauncher is null");
+        }
+        this.vm = Validate.notNull(launcher.connect());
+    }
+
+    /**
      * Get the underlying virtual machine.
      *
      * @return The underlying virtual machine
      */
     public VirtualMachine vm() {
-        return vm;
+        return this.vm;
     }
 
     /**
@@ -71,7 +83,7 @@ public final class Debugger {
      * @param eventRequestor Requests JDI events
      */
     public void requestEvents(EventRequestor eventRequestor) {
-        eventRequestor.requestEvents(vm.eventRequestManager());
+        eventRequestor.requestEvents(this.vm.eventRequestManager());
     }
 
     /**
@@ -105,11 +117,11 @@ public final class Debugger {
      * Run the underlying virtual machine with the given event visitor and a
      * given timeout (in milliseconds).
      *
-     * @param visitor Event visitor to handle events
+     * @param visitor      Event visitor to handle events
      * @param milliseconds Timeout in milliseconds
      */
     public void run(EventVisitor visitor, long milliseconds) {
-        EventThread eventThread = new EventThread(vm, visitor);
+        EventThread eventThread = new EventThread(this.vm, visitor);
 
         eventThread.start();
         try {

@@ -19,26 +19,24 @@
 
 package org.jdivisitor.debugger.event;
 
+import com.sun.jdi.event.VMStartEvent;
+import lombok.AllArgsConstructor;
 import org.jdivisitor.debugger.event.visitor.EventVisitor;
 import org.jdivisitor.debugger.event.visitor.Visitable;
-import com.sun.jdi.event.VMStartEvent;
 
 /**
  * Visitable VM start event.
- * 
+ *
  * @author Adrian Herrera
  * @see VMStartEvent
  */
+@AllArgsConstructor
 public class VisitableVMStartEvent implements Visitable {
 
     private final VMStartEvent event;
 
-    public VisitableVMStartEvent(VMStartEvent event) {
-        this.event = event;
-    }
-
     @Override
     public void accept(EventVisitor visitor) {
-        visitor.visit(event);
+        visitor.visit(this.event);
     }
 }

@@ -23,7 +23,7 @@ import java.io.Serializable;
 
 /**
  * Interface for classes that will implement the Visitor pattern.
- * 
+ *
  * @author Adrian Herrera
  * @see EventVisitor
  */
@@ -32,7 +32,7 @@ public interface Visitable extends Serializable {
     /**
      * Method to accept a visitor. This method usually doesn't do more than
      * {@code visitor.visit(this)}.
-     * 
+     *
      * @param visitor The visitor
      */
     void accept(EventVisitor visitor);

@@ -50,8 +50,8 @@ class StreamRedirectThread extends Thread {
      * Set up for copy.
      *
      * @param name Name of the thread
-     * @param in Stream to copy from
-     * @param out Stream to copy to
+     * @param in   Stream to copy from
+     * @param out  Stream to copy to
      */
     StreamRedirectThread(String name, InputStream in, OutputStream out) {
         super(name);
@@ -68,10 +68,10 @@ class StreamRedirectThread extends Thread {
         try {
             char[] cbuf = new char[BUFFER_SIZE];
             int count;
-            while ((count = in.read(cbuf, 0, BUFFER_SIZE)) >= 0) {
-                out.write(cbuf, 0, count);
+            while ((count = this.in.read(cbuf, 0, BUFFER_SIZE)) >= 0) {
+                this.out.write(cbuf, 0, count);
             }
-            out.flush();
+            this.out.flush();
         } catch (IOException exc) {
             System.err.println("Child I/O Transfer - " + exc);
         }

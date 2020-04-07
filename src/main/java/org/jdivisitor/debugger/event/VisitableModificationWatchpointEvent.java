@@ -19,27 +19,24 @@
 
 package org.jdivisitor.debugger.event;
 
+import com.sun.jdi.event.ModificationWatchpointEvent;
+import lombok.AllArgsConstructor;
 import org.jdivisitor.debugger.event.visitor.EventVisitor;
 import org.jdivisitor.debugger.event.visitor.Visitable;
-import com.sun.jdi.event.ModificationWatchpointEvent;
 
 /**
  * Visitable modification watchpoint event.
- * 
+ *
  * @author Adrian Herrera
  * @see ModificationWatchpointEvent
  */
+@AllArgsConstructor
 public class VisitableModificationWatchpointEvent implements Visitable {
 
     private final ModificationWatchpointEvent event;
 
-    public VisitableModificationWatchpointEvent(
-            ModificationWatchpointEvent event) {
-        this.event = event;
-    }
-
     @Override
     public void accept(EventVisitor visitor) {
-        visitor.visit(event);
+        visitor.visit(this.event);
     }
 }

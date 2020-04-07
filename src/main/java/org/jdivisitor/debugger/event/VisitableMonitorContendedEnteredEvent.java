@@ -19,27 +19,24 @@
 
 package org.jdivisitor.debugger.event;
 
+import com.sun.jdi.event.MonitorContendedEnteredEvent;
+import lombok.AllArgsConstructor;
 import org.jdivisitor.debugger.event.visitor.EventVisitor;
 import org.jdivisitor.debugger.event.visitor.Visitable;
-import com.sun.jdi.event.MonitorContendedEnteredEvent;
 
 /**
  * Visitable monitor contended entered event.
- * 
+ *
  * @author Adrian Herrera
  * @see MonitorContendedEnteredEvent
  */
+@AllArgsConstructor
 public class VisitableMonitorContendedEnteredEvent implements Visitable {
 
     private final MonitorContendedEnteredEvent event;
 
-    public VisitableMonitorContendedEnteredEvent(
-            MonitorContendedEnteredEvent event) {
-        this.event = event;
-    }
-
     @Override
     public void accept(EventVisitor visitor) {
-        visitor.visit(event);
+        visitor.visit(this.event);
     }
 }

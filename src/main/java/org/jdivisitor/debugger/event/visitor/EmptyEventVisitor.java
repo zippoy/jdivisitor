@@ -42,7 +42,7 @@ import com.sun.jdi.event.WatchpointEvent;
 
 /**
  * Provides a visitor with empty method bodies to be overriden by subclasses.
- * 
+ *
  * @author Adrian Herrera
  */
 public abstract class EmptyEventVisitor implements EventVisitor {

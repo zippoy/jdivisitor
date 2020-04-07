@@ -19,25 +19,24 @@
 
 package org.jdivisitor.debugger.launcher;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
-
 import com.sun.jdi.Bootstrap;
 import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.LaunchingConnector;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Create and start a local virtual machine in debug mode.
  *
  * @author Adrian Herrera
  */
-public class LocalVMLauncher extends VMConnector {
+public class LocalVMLauncher extends VMLauncher {
 
     /**
      * The name of the main class to launch.
@@ -81,10 +80,10 @@ public class LocalVMLauncher extends VMConnector {
      * and {@code stderr} can be redirected.
      *
      * @param mainClass The main class to launch (cannot be {@code null})
-     * @param out Where to redirect the debugee's {@code stdout}. A {@code null}
-     *        value means the debugee's {@code stdout} will be ignored
-     * @param err Where to redirect the debugee's {@code stderr}. A {@code null}
-     *        value means the debugee's {@code stderr} will be ignored
+     * @param out       Where to redirect the debugee's {@code stdout}. A {@code null}
+     *                  value means the debugee's {@code stdout} will be ignored
+     * @param err       Where to redirect the debugee's {@code stderr}. A {@code null}
+     *                  value means the debugee's {@code stderr} will be ignored
      */
     public LocalVMLauncher(String mainClass, OutputStream out, OutputStream err) {
         this(mainClass, StringUtils.EMPTY, out, err);
@@ -98,7 +97,7 @@ public class LocalVMLauncher extends VMConnector {
      * local {@code stdout} and {@code stderr} respectively.
      *
      * @param mainClass The main class to launch (cannot be {@code null})
-     * @param options The options to launch the virtual machine with
+     * @param options   The options to launch the virtual machine with
      */
     public LocalVMLauncher(String mainClass, String options) {
         this(mainClass, options, System.out, System.err);
@@ -111,19 +110,19 @@ public class LocalVMLauncher extends VMConnector {
      * machine's {@code stdout} and {@code stderr} can be redirected.
      *
      * @param mainClass The main class to launch (cannot be {@code null})
-     * @param options The options to launch the virtual machine with (cannot be
-     *        {@code null})
-     * @param out Where to redirect the debugee's {@code stdout}. A {@code null}
-     *        value means the debugee's {@code stdout} will be ignored
-     * @param err Where to redirect the debugee's {@code stderr}. A {@code null}
-     *        value means the debugee's {@code stderr} will be ignored
+     * @param options   The options to launch the virtual machine with (cannot be
+     *                  {@code null})
+     * @param out       Where to redirect the debugee's {@code stdout}. A {@code null}
+     *                  value means the debugee's {@code stdout} will be ignored
+     * @param err       Where to redirect the debugee's {@code stderr}. A {@code null}
+     *                  value means the debugee's {@code stderr} will be ignored
      */
     public LocalVMLauncher(String mainClass, String options, OutputStream out,
-            OutputStream err) {
+                           OutputStream err) {
         this.mainClass = Validate.notNull(mainClass);
         this.options = Validate.notNull(options);
-        outStream = out;
-        errStream = err;
+        this.outStream = out;
+        this.errStream = err;
     }
 
     @Override
@@ -151,8 +150,8 @@ public class LocalVMLauncher extends VMConnector {
         Map<String, Connector.Argument> arguments = connector
                 .defaultArguments();
 
-        arguments.get("main").setValue(mainClass);
-        arguments.get("options").setValue(options);
+        arguments.get("main").setValue(this.mainClass);
+        arguments.get("options").setValue(this.options);
 
         return arguments;
     }
@@ -165,12 +164,12 @@ public class LocalVMLauncher extends VMConnector {
     private void redirectOutput(VirtualMachine vm) {
         Process process = vm.process();
 
-        if (outStream != null) {
-            redirectStream("jdi-out", process.getInputStream(), outStream);
+        if (this.outStream != null) {
+            redirectStream("jdi-out", process.getInputStream(), this.outStream);
         }
 
-        if (errStream != null) {
-            redirectStream("jdi-err", process.getErrorStream(), errStream);
+        if (this.errStream != null) {
+            redirectStream("jdi-err", process.getErrorStream(), this.errStream);
         }
     }
 
@@ -178,11 +177,10 @@ public class LocalVMLauncher extends VMConnector {
      * Redirect an input stream to an output stream in a new daemon thread.
      *
      * @param name Thread name
-     * @param in Input stream
-     * @param out Output stream
+     * @param in   Input stream
+     * @param out  Output stream
      */
-    private static void redirectStream(String name, InputStream in,
-            OutputStream out) {
+    private static void redirectStream(String name, InputStream in, OutputStream out) {
         Thread thread = new StreamRedirectThread(name, in, out);
 
         thread.setDaemon(true);

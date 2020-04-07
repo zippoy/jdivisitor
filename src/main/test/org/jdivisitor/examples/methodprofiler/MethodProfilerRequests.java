@@ -17,26 +17,30 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package org.jdivisitor.debugger.event;
+package org.jdivisitor.examples.methodprofiler;
 
-import com.sun.jdi.event.MonitorContendedEnterEvent;
-import lombok.AllArgsConstructor;
-import org.jdivisitor.debugger.event.visitor.EventVisitor;
-import org.jdivisitor.debugger.event.visitor.Visitable;
+import com.sun.jdi.request.EventRequestManager;
+import com.sun.jdi.request.MethodEntryRequest;
+import org.jdivisitor.debugger.request.EventRequestor;
 
 /**
- * Visitable monitor contended enter event.
+ * Request the events we want delivered to the debugger. We are only interested
+ * in method entry events.
  *
  * @author Adrian Herrera
- * @see MonitorContendedEnterEvent
  */
-@AllArgsConstructor
-public class VisitableMonitorContendedEnterEvent implements Visitable {
+class MethodProfilerRequests implements EventRequestor {
 
-    private final MonitorContendedEnterEvent event;
+    // Exclude these packages
+    private final static String[] EXCLUDES = { "sun.*", "com.sun.*" };
 
     @Override
-    public void accept(EventVisitor visitor) {
-        visitor.visit(this.event);
+    public void requestEvents(EventRequestManager erm) {
+        // Exclude some packages
+        MethodEntryRequest mer = erm.createMethodEntryRequest();
+        for (String exclude : EXCLUDES) {
+            mer.addClassExclusionFilter(exclude);
+        }
+        mer.enable();
     }
 }

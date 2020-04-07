@@ -19,26 +19,24 @@
 
 package org.jdivisitor.debugger.event;
 
+import com.sun.jdi.event.VMDeathEvent;
+import lombok.AllArgsConstructor;
 import org.jdivisitor.debugger.event.visitor.EventVisitor;
 import org.jdivisitor.debugger.event.visitor.Visitable;
-import com.sun.jdi.event.VMDeathEvent;
 
 /**
  * Visitable VM death event.
- * 
+ *
  * @author Adrian Herrera
  * @see VMDeathEvent
  */
+@AllArgsConstructor
 public class VisitableVMDeathEvent implements Visitable {
 
     private final VMDeathEvent event;
 
-    public VisitableVMDeathEvent(VMDeathEvent event) {
-        this.event = event;
-    }
-
     @Override
     public void accept(EventVisitor visitor) {
-        visitor.visit(event);
+        visitor.visit(this.event);
     }
 }
